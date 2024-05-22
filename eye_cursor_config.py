@@ -12,5 +12,6 @@ secondaryEye = rightEye
 
 cam = 0
 circleRadius = 3
+frameScale = 2
 
 draw = True

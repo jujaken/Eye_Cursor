@@ -55,6 +55,8 @@ class Eye:
 
 class EyeCursorApp:
 
+    frameScale = 1
+
     def __init__(self, primaryEye, secondaryEye, cam):
         self.primaryEye, self.secondaryEye = primaryEye, secondaryEye
         self.fm = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
@@ -69,12 +71,18 @@ class EyeCursorApp:
         self.fh, self.fw, _ = self.frame.shape
         self.rgb_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
+    def _calcW(self):
+        return self.fw * self.frameScale
+    
+    def _calcH(self):
+        return self.fh * self.frameScale
+
     def _drawAllLandmarks(self):
         for id, landmark in enumerate(self.lm):
-            x = int(landmark.x * self.fw)
-            y = int(landmark.y * self.fh)
+            x = int(landmark.x * self._calcW())
+            y = int(landmark.y * self._calcH())
             # cv2.circle(self.frame, (x, y), self.circleRadius, self.defaultColor)
-            cv2.putText(self.frame, str(id), (x, y), 3, 0.35, self.defaultColor)
+            cv2.putText(self.frame, str(id), (x, y), 3, 0.25, self.defaultColor)
 
     def _drawEyeLandmarks(self):
         for eye in [self.primaryEye, self.secondaryEye]:
@@ -109,6 +117,7 @@ class EyeCursorApp:
         pyautogui.FAILSAFE = True
         
     def drawGui(self):
+        self.frame = cv2.resize(self.frame, (self._calcW(), self._calcH()))
         if self.lm: (all and self._drawAllLandmarks or self._drawEyeLandmarks)()
         cv2.imshow('Eye Cursor', self.frame)
         cv2.waitKey(1)
