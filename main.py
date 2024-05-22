@@ -5,8 +5,7 @@ from eye_cursor_config import *
 app = EyeCursorApp(primaryEye, secondaryEye, cam)
 if draw: app.setputGui(circleRadius)
 
-def exit():
-    return cv2.waitKey(1) & 0xFF == ord('q')
+def exit(): return cv2.waitKey(1) & 0xFF == ord('q')
 
 while True:
     app.tick()
