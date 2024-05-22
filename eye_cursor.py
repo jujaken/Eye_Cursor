@@ -1,3 +1,4 @@
+
 import cv2
 import mediapipe as mp
 import pyautogui
@@ -51,13 +52,11 @@ class Eye:
 
 class EyeCursorApp:
 
-    def __init__(self, primaryEye, secondaryEye, circleRadius, defaultColor = (0, 0, 255)):
+    def __init__(self, primaryEye, secondaryEye):
         self.primaryEye, self.secondaryEye = primaryEye, secondaryEye
         self.fm = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
         self.sh, self.sw = pyautogui.size()
         self.cam = cv2.VideoCapture(0)
-        self.circleRadius = circleRadius
-        self.defaultColor = defaultColor
 
     # private: 
 
@@ -67,15 +66,12 @@ class EyeCursorApp:
         self.fh, self.fw, _ = self.frame.shape
         self.rgb_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
-    def _updateLandmarks(self):
-        lm = self.fm.process(self.rgb_frame).multi_face_landmarks
-        self.lm = lm and lm[0].landmark
-
     def _drawAllLandmarks(self):
-        for landmark in self.lm:
+        for id, landmark in enumerate(self.lm):
             x = int(landmark.x * self.fw)
             y = int(landmark.y * self.fh)
-            cv2.circle(self.frame, (x, y), self.circleRadius, self.defaultColor)
+            # cv2.circle(self.frame, (x, y), self.circleRadius, self.defaultColor)
+            cv2.putText(self.frame, str(id), (x, y), 1, 0.35, self.defaultColor)
 
     def _drawEyeLandmarks(self):
         for eye in [self.primaryEye, self.secondaryEye]:
@@ -88,18 +84,28 @@ class EyeCursorApp:
 
     # public:
 
-    def setput(self):
-        pyautogui.FAILSAFE = True
-
-    def tick(self, all = False):
+    def updateLandmarks(self):
         self._updateFrame()
-        self._updateLandmarks()
-        if self.lm: (all and self._drawAllLandmarks or self._drawEyeLandmarks)()
-        cv2.imshow('Eye Cursor', self.frame)
-        cv2.waitKey(1)
+        lm = self.fm.process(self.rgb_frame).multi_face_landmarks
+        self.lm = lm and lm[0].landmark
 
-    def moveCursor(self):
+    def useCursor(self):
         pass
     
     def useControls(self):
         pass
+
+    def tick(self):
+        self.updateLandmarks()
+        self.useCursor()
+        self.useControls()
+
+    def setputGui(self, circleRadius, defaultColor = (0, 0, 255)):
+        self.circleRadius = circleRadius
+        self.defaultColor = defaultColor
+        pyautogui.FAILSAFE = True
+        
+    def drawGui(self):
+        if self.lm: (all and self._drawAllLandmarks or self._drawEyeLandmarks)()
+        cv2.imshow('Eye Cursor', self.frame)
+        cv2.waitKey(1)
