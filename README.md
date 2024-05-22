@@ -8,8 +8,8 @@ This is a program built to help control the cursor of any laptop or desktop usin
 
 ## Installation
 1. Go To _https://www.python.org/_ and install the latest version of python if not present in the system.
-2. Open the CLU and install Mediapipe `pip install mediapipe`, PyAutoGUI `pip install pyautogui` and Opencv `pip install opencv-python`
+2. Open the CLU and install Mediapipe `py pip install mediapipe`, PyAutoGUI `py pip install pyautogui` and Opencv `py pip install opencv-python`
 3. Clone the repositry with `gh repo clone Skanda2007/Eye_Cursor`
 
 ## Running
-In the CLI open the repositry folder and enter `main.py`
+In the CLI open the repositry folder and enter `main.py` or use `py main.py`
