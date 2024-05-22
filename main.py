@@ -2,7 +2,7 @@
 from eye_cursor import *
 from eye_cursor_config import *
 
-app = EyeCursorApp(primaryEye, secondaryEye)
+app = EyeCursorApp(primaryEye, secondaryEye, cam)
 if draw: app.setputGui(circleRadius)
 
 def exit():

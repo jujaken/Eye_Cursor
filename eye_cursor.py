@@ -28,7 +28,9 @@ class EyeLandmark:
 
 class Eye:
 
-    def __init__(self, up: int, down: int, left: int, right: int, minDist, color):
+    # up - upper eyelid
+    # down, left, right - parts of the pupil
+    def __init__(self, lid : int, center : int, up: int, down: int, left: int, right: int, minDist, color):
         self.up = EyeLandmark('up', up, color)
         self.down = EyeLandmark('down', down, color)
         self.left = EyeLandmark('left', left, color)
@@ -44,19 +46,16 @@ class Eye:
         if self.right.isCorrent(): tbl.append(self.right)
         return tbl
     
-    def center(self, landmarks):
-        return (0, 0)
-    
     def isOpen(self, landmarks) -> bool :
         return True
 
 class EyeCursorApp:
 
-    def __init__(self, primaryEye, secondaryEye):
+    def __init__(self, primaryEye, secondaryEye, cam):
         self.primaryEye, self.secondaryEye = primaryEye, secondaryEye
         self.fm = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
         self.sh, self.sw = pyautogui.size()
-        self.cam = cv2.VideoCapture(0)
+        self.cam = cv2.VideoCapture(cam)
 
     # private: 
 
