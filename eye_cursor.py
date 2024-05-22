@@ -28,22 +28,26 @@ class EyeLandmark:
 
 class Eye:
 
+    lms = []
+
+    def _addLandMark(self, name, id, color):
+        self.lms.append(EyeLandmark(name, id, color))
+
     # up - upper eyelid
     # down, left, right - parts of the pupil
     def __init__(self, lid : int, center : int, up: int, down: int, left: int, right: int, minDist, color):
-        self.up = EyeLandmark('up', up, color)
-        self.down = EyeLandmark('down', down, color)
-        self.left = EyeLandmark('left', left, color)
-        self.right = EyeLandmark('right', right, color)
+        self._addLandMark('lid', lid, color)
+        self._addLandMark('center', center, color)
+        self._addLandMark('up', up, color)
+        self._addLandMark('down', down, color)
+        self._addLandMark('left', left, color)
+        self._addLandMark('right', right, color)
         self.minDist = minDist
         self.color = color
 
     def eyeLandmarks(self) -> list[EyeLandmark] :
         tbl = []
-        if self.up.isCorrent(): tbl.append(self.up)
-        if self.down.isCorrent(): tbl.append(self.down)
-        if self.left.isCorrent(): tbl.append(self.left)
-        if self.right.isCorrent(): tbl.append(self.right)
+        for lm in self.lms: tbl.append(lm)
         return tbl
     
     def isOpen(self, landmarks) -> bool :
@@ -70,7 +74,7 @@ class EyeCursorApp:
             x = int(landmark.x * self.fw)
             y = int(landmark.y * self.fh)
             # cv2.circle(self.frame, (x, y), self.circleRadius, self.defaultColor)
-            cv2.putText(self.frame, str(id), (x, y), 1, 0.35, self.defaultColor)
+            cv2.putText(self.frame, str(id), (x, y), 3, 0.35, self.defaultColor)
 
     def _drawEyeLandmarks(self):
         for eye in [self.primaryEye, self.secondaryEye]:
