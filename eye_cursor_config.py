@@ -1,11 +1,11 @@
 
 from eye_cursor import Eye
 
-red = (255, 0, 0)
+green = (255, 0, 0)
 blue = (0, 255, 0)
 
-leftEye = Eye(0, 0, 0, 0, 0, 0, .007, red)
-rightEye = Eye(0, 0, 0, 0, 0, 0, .007, blue)
+rightEye = Eye(386, 374, 473, 475, 477, 476, 474, .007, blue)
+leftEye = Eye(159, 145, 468, 470, 472, 471, 469, .007, green)
 
 primaryEye = leftEye
 secondaryEye = rightEye

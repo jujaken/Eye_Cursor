@@ -16,7 +16,7 @@ class EyeLandmark:
         self.id = id
         self.color = color
 
-    def isCorrent(self):
+    def isCorrect(self):
         return self.id > 0
 
     def landmark(self, landmarks):
@@ -35,8 +35,9 @@ class Eye:
 
     # up - upper eyelid
     # down, left, right - parts of the pupil
-    def __init__(self, lid : int, center : int, up: int, down: int, left: int, right: int, minDist, color):
-        self._addLandMark('lid', lid, color)
+    def __init__(self, lidUp : int, lidDown : int, center : int, up: int, down: int, left: int, right: int, minDist, color):
+        self._addLandMark('lidUp', lidUp, color)
+        self._addLandMark('lidDown', lidDown, color)
         self._addLandMark('center', center, color)
         self._addLandMark('up', up, color)
         self._addLandMark('down', down, color)
@@ -82,12 +83,13 @@ class EyeCursorApp:
             x = int(landmark.x * self._calcW())
             y = int(landmark.y * self._calcH())
             # cv2.circle(self.frame, (x, y), self.circleRadius, self.defaultColor)
-            cv2.putText(self.frame, str(id), (x, y), 3, 0.25, self.defaultColor)
+            cv2.putText(self.frame, str(id), (x, y), 3, 0.5, self.defaultColor)
 
     def _drawEyeLandmarks(self):
         for eye in [self.primaryEye, self.secondaryEye]:
             for eyeLandmark in eye.eyeLandmarks():
-                x, y = eyeLandmark.pos(self.lm, self.fw, self.fh)
+                if not eyeLandmark.isCorrect(): continue
+                x, y = eyeLandmark.pos(self.lm, self._calcW(), self._calcH())
                 cv2.circle(self.frame, (x, y), self.circleRadius, eyeLandmark.color)
 
     def _clickControl(eye : Eye, name : str):
@@ -116,7 +118,7 @@ class EyeCursorApp:
         self.defaultColor = defaultColor
         pyautogui.FAILSAFE = True
         
-    def drawGui(self):
+    def drawGui(self, all = False):
         self.frame = cv2.resize(self.frame, (self._calcW(), self._calcH()))
         if self.lm: (all and self._drawAllLandmarks or self._drawEyeLandmarks)()
         cv2.imshow('Eye Cursor', self.frame)
