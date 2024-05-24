@@ -139,15 +139,9 @@ class EyeCursorApp:
                 x, y = eyeLandmark.pos(self.lm, self._calcW(), self._calcH())
                 cv2.circle(self.frame, (x, y), self.circleRadius, eyeLandmark.color)
 
-    def _clickControl(eye : Eye, name : str):
+    def _clickControl(self, eye : Eye, name : str):
         (eye.isOpen() and pyautogui.mouseDown or pyautogui.mouseUp)(button=name)
 
-    def _control(self, eye, name):
-        if not eye.isOpen(self.lm):
-            pyautogui.mouseDown(name)
-            pyautogui.sleep(0.5)
-        else:
-            pyautogui.mouseUp()
     # public:
 
     def updateLandmarks(self):
@@ -159,8 +153,8 @@ class EyeCursorApp:
         pass
     
     def useControls(self):
-        self._control(self.primaryEye, 'primary')
-        self._control(self.secondaryEye, 'secondary')
+        self._clickControl(self.primaryEye, 'primary')
+        self._clickControl(self.secondaryEye, 'secondary')
 
     def tick(self):
         self.updateLandmarks()
